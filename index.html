@@ -1,11 +1,125 @@
 import random
 import time
 import os
+import sys
+from datetime import datetime
 
-# -----------------------------
-# Cash Flow Game - Enhanced Console Version
-# By Command of Master Lord DaRuT
-# -----------------------------
+# Color Constants
+COLOR_RESET = "\033[0m"
+COLOR_RED = "\033[91m"
+COLOR_GREEN = "\033[92m"
+COLOR_YELLOW = "\033[93m"
+COLOR_BLUE = "\033[94m"
+COLOR_MAGENTA = "\033[95m"
+COLOR_CYAN = "\033[96m"
+COLOR_WHITE = "\033[97m"
+COLOR_GRAY = "\033[90m"
+
+# ASCII Art
+TITLE_ART = f"""
+{COLOR_CYAN}   ____           __    ______                __   ______           __     
+  / __/__ ____ _/ /_  / ____/_______  ___  __/ /  /_  __/___  ___  / /____ 
+ / _// _ `/ _ `/ __/ / /_  / ___/ _ \\/ _ \\/ _  /    / / / __ \\/ _ \\/ __/ _ \\
+/___/\\_,_/\\_,_/\\__/  \\____/_/   \\___/\\___/\\_,_/    /_/ /_/ /_/\\___/\\__/\\___/
+{COLOR_RESET}"""
+
+GOD_MODE_ART = f"""
+{COLOR_YELLOW}  ▄████  ▒█████   ██▄▄▄▄    ▄▄▄▄      ███▄ ▄███▓ ▄▄▄▄    ▒█████   ██▀███  
+ ██▒ ▀█▒▒██▒  ██▒▓██   ██▄▓█████▄   ▓██▒▀█▀ ██▒▓█████▄ ▒██▒  ██▒▓██ ▒ ██▒
+▒██░▄▄▄░▒██░  ██▒▒██  ██▒ ▒██▒ ▄██  ▓██    ▓██░▒██▒ ▄██▒██░  ██▒▓██ ░▄█ ▒
+░▓█  ██▓▒██   ██░░ ▒██▓▒ ░ ▒██░█▀    ▒██    ▒██ ▒██░█▀  ▒██   ██░▒██▀▀█▄  
+░▒▓███▀▒░ ████▓▒░  ░ ░▒ ▒░ ░▓█  ▀█▓  ▒██▒   ░██▒░▓█  ▀█▓░ ████▓▒░░██▓ ▒██▒
+ ░▒   ▒ ░ ▒░▒░▒░    ░ ░▒ ░  ░▒▓███▀▒ ░ ▒░   ░  ░░▒▓███▀▒░ ▒░▒░▒░ ░ ▒▓ ░▒▓░
+  ░   ░   ░ ▒ ▒░    ░ ░     ▒░▒   ░  ░  ░      ░▒░▒   ░   ░ ▒ ▒░   ░▒ ░ ▒░
+░ ░   ░ ░ ░ ░ ▒   ░          ░    ░  ░      ░    ░    ░ ░ ░ ░ ▒    ░░   ░ 
+      ░     ░ ░             ░             ░      ░          ░ ░     ░     
+                                ░                         ░                {COLOR_RESET}"""
+
+RAT_RACE_ART = f"""
+{COLOR_GRAY}                ▄▄▄▄    ▄▄▄       ██▀███   ▄████▄   ██▓ ██▓    
+               ▓█████▄ ▒████▄    ▓██ ▒ ██▒▒██▀ ▀█  ▓██▒▓██▒    
+               ▒██▒ ▄██▒██  ▀█▄  ▓██ ░▄█ ▒▒▓█    ▄ ▒██▒▒██░    
+               ▒██░█▀  ░██▄▄▄▄██ ▒██▀▀█▄  ▒▓▓▄ ▄██▒░██░▒██░    
+               ░▓█  ▀█▓ ▓█   ▓██▒░██▓ ▒██▒▒ ▓███▀ ░░██░░██████▒
+               ░▒▓███▀▒ ▒▒   ▓▒█░░ ▒▓ ░▒▓░░ ░▒ ▒  ░░▓  ░ ▒░▓  ░
+               ▒░▒   ░   ▒   ▒▒ ░  ░▒ ░ ▒░  ░  ▒    ▒ ░░ ░ ▒  ░
+                ░    ░   ░   ▒     ░░   ░ ░         ▒ ░  ░ ░   
+                ░            ░  ░   ░     ░ ░       ░      ░  ░
+                     ░                 ░                        {COLOR_RESET}"""
+
+FAST_TRACK_ART = f"""
+{COLOR_MAGENTA}             █████▒▄▄▄       ██▓     ██▓    ▄▄▄      ▓█████▄ 
+           ▓██   ▒▒████▄    ▓██▒    ▓██▒   ▒████▄    ▒██▀ ██▌
+           ▒████ ░▒██  ▀█▄  ▒██░    ▒██░   ▒██  ▀█▄  ░██   █▌
+           ░▓█▒  ░░██▄▄▄▄██ ▒██░    ▒██░   ░██▄▄▄▄██ ░▓█▄   ▌
+           ░▒█░    ▓█   ▓██▒░██████▒░██████▒▓█   ▓██▒░▒████▓ 
+            ▒ ░    ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░▒▒   ▓▒█░ ▒▒▓  ▒ 
+            ░       ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░ ▒   ▒▒ ░ ░ ▒  ▒ 
+            ░ ░     ░   ▒     ░ ░     ░ ░    ░   ▒    ░ ░  ░ 
+                        ░  ░    ░  ░    ░  ░     ░  ░   ░    
+                                                         ░    {COLOR_RESET}"""
+
+# Game Constants
+JOB_ROLES = {
+    "Teacher": {"income": 3000, "expenses": 2500, "emoji": "📚"},
+    "Doctor": {"income": 8000, "expenses": 6000, "emoji": "⚕️"},
+    "Mechanic": {"income": 4000, "expenses": 3000, "emoji": "🔧"},
+    "Artist": {"income": 2500, "expenses": 2000, "emoji": "🎨"},
+    "Lawyer": {"income": 7000, "expenses": 5500, "emoji": "⚖️"},
+    "Engineer": {"income": 6000, "expenses": 4500, "emoji": "👨‍💻"},
+    "Chef": {"income": 3500, "expenses": 2800, "emoji": "👨‍🍳"},
+    "Athlete": {"income": 10000, "expenses": 7500, "emoji": "🏃"},
+}
+
+DREAMS = [
+    {"name": "Own a Tropical Island", "cost": 500000, "emoji": "🏝️"},
+    {"name": "Start a Space Tourism Company", "cost": 2000000, "emoji": "🚀"},
+    {"name": "Open a Chain of Vegan Restaurants", "cost": 750000, "emoji": "🌱"},
+    {"name": "Build a Wildlife Sanctuary", "cost": 1000000, "emoji": "🦁"},
+    {"name": "Launch a Record Label", "cost": 800000, "emoji": "🎵"},
+    {"name": "Create a Tech Unicorn", "cost": 5000000, "emoji": "🦄"},
+]
+
+OPPORTUNITIES = [
+    {"type": "stock", "name": "Tech Stock", "cost": 500, "income": 0, "value": 800, "risk": 3, "emoji": "💹"},
+    {"type": "real estate", "name": "Rental Property", "cost": 2000, "income": 200, "value": 3000, "risk": 2, "emoji": "🏠"},
+    {"type": "business", "name": "Food Truck", "cost": 1500, "income": 300, "value": 2000, "risk": 4, "emoji": "🍔"},
+    {"type": "franchise", "name": "Mini Mart Franchise", "cost": 5000, "income": 800, "value": 7000, "risk": 3, "emoji": "🏪"},
+    {"type": "crypto", "name": "Cryptocurrency", "cost": 1000, "income": 0, "value": 1500, "risk": 5, "emoji": "₿"},
+    {"type": "land", "name": "Undeveloped Land", "cost": 3000, "income": 0, "value": 6000, "risk": 2, "emoji": "🌳"},
+    {"type": "startup", "name": "AI Startup", "cost": 10000, "income": 1500, "value": 30000, "risk": 5, "emoji": "🤖"},
+    {"type": "royalties", "name": "Book Royalties", "cost": 4000, "income": 500, "value": 10000, "risk": 2, "emoji": "📖"},
+]
+
+DOODADS = [
+    {"name": "Buy a New Phone", "cost": 800, "emoji": "📱"},
+    {"name": "Luxury Vacation", "cost": 2000, "emoji": "✈️"},
+    {"name": "Emergency Medical Bill", "cost": 1200, "emoji": "🏥"},
+    {"name": "Wedding Gift", "cost": 500, "emoji": "💍"},
+    {"name": "New Car", "cost": 3000, "emoji": "🚗"},
+    {"name": "Designer Wardrobe", "cost": 1500, "emoji": "👗"},
+    {"name": "Home Renovation", "cost": 4000, "emoji": "🏡"},
+    {"name": "Boat Purchase", "cost": 3500, "emoji": "⛵"},
+]
+
+MARKET_EVENTS = [
+    {"name": "Stock Market Boom", "effect": "assets", "multiplier": 1.5, "emoji": "📈"},
+    {"name": "Real Estate Crash", "effect": "real estate", "multiplier": 0.7, "emoji": "📉"},
+    {"name": "Inflation Spike", "effect": "expenses", "amount": 500, "emoji": "💸"},
+    {"name": "Tax Refund", "effect": "cash", "amount": 1000, "emoji": "💰"},
+    {"name": "Business Boom", "effect": "income", "amount": 1000, "emoji": "🚀"},
+    {"name": "Economic Recession", "effect": "income", "amount": -800, "emoji": "🌧️"},
+    {"name": "Tech Revolution", "effect": "tech", "multiplier": 2.0, "emoji": "💻"},
+    {"name": "Natural Disaster", "effect": "real estate", "multiplier": 0.5, "emoji": "🌪️"},
+]
+
+LIABILITIES = [
+    {"name": "Student Loan", "amount": 300, "emoji": "🎓"},
+    {"name": "Car Payment", "amount": 400, "emoji": "🚘"},
+    {"name": "Credit Card Debt", "amount": 250, "emoji": "💳"},
+    {"name": "Mortgage", "amount": 1200, "emoji": "🏠"},
+    {"name": "Business Loan", "amount": 800, "emoji": "🏢"},
+]
 
 class Player:
     def __init__(self, name):
@@ -13,7 +127,9 @@ class Player:
         self.job = random.choice(list(JOB_ROLES.keys()))
         job_data = JOB_ROLES[self.job]
         self.income = job_data['income']
+        self.base_income = self.income
         self.expenses = job_data['expenses']
+        self.base_expenses = self.expenses
         self.assets = []
         self.liabilities = []
         self.cash = 1000
@@ -22,10 +138,15 @@ class Player:
         self.in_rat_race = True
         self.dream = random.choice(DREAMS)
         self.escaped = False
-    
+        self.turns = 0
+        self.net_worth_history = []
+        self.cash_history = []
+        self.achievements = []
+        self.risk_tolerance = random.randint(1, 5)
+        
     def net_worth(self):
         asset_value = sum(asset['value'] for asset in self.assets)
-        liability_value = sum(liability['amount'] for liability in self.liabilities)
+        liability_value = sum(liability['amount'] * 10 for liability in self.liabilities)  # 10x multiplier for liabilities
         return asset_value - liability_value + self.cash
     
     def update_passive_income(self):
@@ -37,142 +158,64 @@ class Player:
         return net_expense
     
     def display_status(self):
-        print(f"\n╔════════════ {self.name}'s Status ════════════╗")
-        print(f"║ {'Job:':<15}{self.job:<25}║")
-        print(f"║ {'Income:':<15}${self.income:<24}║")
-        print(f"║ {'Expenses:':<15}${self.expenses:<24}║")
-        print(f"║ {'Cash:':<15}${self.cash:<24}║")
-        print(f"║ {'Passive Income:':<15}${self.passive_income:<24}║")
-        print(f"║ {'Net Worth:':<15}${self.net_worth():<24}║")
-        print(f"║ {'Position:':<15}{self.position:<25}║")
-        print(f"║ {'Rat Race:':<15}{'Yes' if self.in_rat_race else 'No!':<25}║")
-        print(f"║ {'Dream:':<15}{self.dream:<25}║")
-        print("╚══════════════════════════════════════╝")
+        print(f"\n{COLOR_CYAN}╔════════════ {self.name}'s Status ════════════╗{COLOR_RESET}")
+        print(f"{COLOR_WHITE}║ {'Job:':<15}{self.job} {JOB_ROLES[self.job]['emoji']:<20}║")
+        print(f"║ {'Income:':<15}{COLOR_GREEN}${self.income}{COLOR_RESET}{' '*(24-len(str(self.income)))}║")
+        print(f"║ {'Expenses:':<15}{COLOR_RED}${self.expenses}{COLOR_RESET}{' '*(24-len(str(self.expenses)))}║")
+        print(f"║ {'Cash:':<15}{COLOR_YELLOW}${self.cash}{COLOR_RESET}{' '*(24-len(str(self.cash)))}║")
+        print(f"║ {'Passive Income:':<15}{COLOR_GREEN}${self.passive_income}{COLOR_RESET}{' '*(24-len(str(self.passive_income)))}║")
+        print(f"║ {'Net Worth:':<15}{COLOR_MAGENTA}${self.net_worth()}{COLOR_RESET}{' '*(24-len(str(self.net_worth()))}║")
+        print(f"║ {'Position:':<15}{self.position}/20{' '*(25-len(str(self.position)))}║")
+        print(f"║ {'Rat Race:':<15}{COLOR_RED if self.in_rat_race else COLOR_GREEN}{'Yes' if self.in_rat_race else 'Escaped!'}{COLOR_RESET}{' '*(25)}║")
+        print(f"║ {'Dream:':<15}{self.dream['name']} {self.dream['emoji']}{' '*(25-len(self.dream['name']))}║")
+        print(f"{COLOR_CYAN}╚══════════════════════════════════════╝{COLOR_RESET}")
         
-        # Display assets and liabilities
+        # Display assets
         if self.assets:
-            print("\nAssets:")
+            print(f"\n{COLOR_GREEN}╔════════════ Assets ════════════╗{COLOR_RESET}")
             for asset in self.assets:
-                print(f" - {asset['name']} (Value: ${asset['value']}, Income: ${asset.get('income', 0)})")
+                income_str = f"+${asset.get('income', 0)}/mo" if asset.get('income', 0) > 0 else ""
+                print(f"║ {asset['emoji']} {asset['name']} (Value: ${asset['value']}) {income_str}{' '*(25-len(asset['name']))}║")
+            print(f"{COLOR_GREEN}╚════════════════════════════════╝{COLOR_RESET}")
         
+        # Display liabilities
         if self.liabilities:
-            print("\nLiabilities:")
+            print(f"\n{COLOR_RED}╔════════════ Liabilities ════════════╗{COLOR_RESET}")
             for liability in self.liabilities:
-                print(f" - {liability['name']}: ${liability['amount']}/month")
-
-# -----------------------------
-# Game Constants
-# -----------------------------
-
-JOB_ROLES = {
-    "Teacher": {"income": 3000, "expenses": 2500},
-    "Doctor": {"income": 8000, "expenses": 6000},
-    "Mechanic": {"income": 4000, "expenses": 3000},
-    "Artist": {"income": 2500, "expenses": 2000},
-    "Lawyer": {"income": 7000, "expenses": 5500},
-    "Engineer": {"income": 6000, "expenses": 4500},
-}
-
-DREAMS = [
-    "Own a Tropical Island",
-    "Start a Space Tourism Company",
-    "Open a Chain of Vegan Restaurants",
-    "Build a Wildlife Sanctuary",
-    "Launch a Record Label",
-    "Create a Tech Unicorn"
-]
-
-OPPORTUNITIES = [
-    {"type": "stock", "name": "Tech Stock", "cost": 500, "income": 0, "value": 800},
-    {"type": "real estate", "name": "Rental Property", "cost": 2000, "income": 200, "value": 3000},
-    {"type": "business", "name": "Food Truck", "cost": 1500, "income": 300, "value": 2000},
-    {"type": "franchise", "name": "Mini Mart Franchise", "cost": 5000, "income": 800, "value": 7000},
-    {"type": "crypto", "name": "Cryptocurrency", "cost": 1000, "income": 0, "value": 1500},
-    {"type": "land", "name": "Undeveloped Land", "cost": 3000, "income": 0, "value": 6000}
-]
-
-DOODADS = [
-    {"name": "Buy a New Phone", "cost": 800},
-    {"name": "Luxury Vacation", "cost": 2000},
-    {"name": "Emergency Medical Bill", "cost": 1200},
-    {"name": "Wedding Gift", "cost": 500},
-    {"name": "New Car", "cost": 3000},
-    {"name": "Designer Wardrobe", "cost": 1500},
-    {"name": "Home Renovation", "cost": 4000},
-    {"name": "Boat Purchase", "cost": 3500}
-]
-
-MARKET_EVENTS = [
-    {"name": "Stock Market Boom", "effect": "assets", "multiplier": 1.5},
-    {"name": "Real Estate Crash", "effect": "real estate", "multiplier": 0.7},
-    {"name": "Inflation Spike", "effect": "expenses", "amount": 500},
-    {"name": "Tax Refund", "effect": "cash", "amount": 1000},
-    {"name": "Business Boom", "effect": "income", "amount": 1000}
-]
-
-# -----------------------------
-# Game Functions
-# -----------------------------
+                print(f"║ {liability['emoji']} {liability['name']}: -${liability['amount']}/mo{' '*(25-len(liability['name']))}║")
+            print(f"{COLOR_RED}╚════════════════════════════════════╝{COLOR_RESET}")
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def display_header(title, color=COLOR_CYAN):
+    clear_screen()
+    width = 60
+    print("\n" + color + "═" * width)
+    print(f"║{' ' * ((width - len(title) - 2) // 2)}{title}{' ' * ((width - len(title) - 2) // 2)}║")
+    print("═" * width + COLOR_RESET + "\n")
+
 def draw_card(deck):
     return random.choice(deck)
 
-def display_header(title):
-    clear_screen()
-    print("\n" + "═" * 50)
-    print(f"║{' ' * 16}{title}{' ' * 16}║")
-    print("═" * 50 + "\n")
-
-def take_turn(player, players):
-    display_header(f"{player.name}'s Turn")
-    player.display_status()
+def display_dice_roll(roll):
+    dice_art = [
+        ["     ", " ●   ", "     "],
+        ["●   ", "     ", "   ●"],
+        ["●   ", " ●   ", "   ●"],
+        ["● ● ", "     ", "● ● "],
+        ["● ● ", " ●   ", "● ● "],
+        ["● ● ", "● ● ", "● ● "]
+    ]
     
-    input("\nPress Enter to roll the dice...")
-    roll = random.randint(1, 6)
-    player.position = (player.position + roll) % 20
-    
-    print(f"\n🎲 Rolled a {roll}! Moved to position {player.position}")
-    
-    # Position-based events
-    if player.position == 0:
-        print("\n🌟 Starting position bonus: $500!")
-        player.cash += 500
-    elif player.position % 5 == 0:
-        card = draw_card(DOODADS)
-        print(f"\n💸 DOODAD: {card['name']} (-${card['cost']})")
-        player.cash -= card['cost']
-    elif player.position % 4 == 0:
-        event = draw_card(MARKET_EVENTS)
-        print(f"\n📈 MARKET EVENT: {event['name']}")
-        apply_market_event(event, player, players)
-    elif player.position % 3 == 0:
-        card = draw_card(OPPORTUNITIES)
-        print(f"\n💼 OPPORTUNITY: {card['name']}")
-        print(f"   Cost: ${card['cost']}, Income: ${card['income']}, Value: ${card['value']}")
-        
-        if player.cash < card['cost']:
-            print("   ❌ Insufficient funds to invest")
-            return
-        
-        choice = input("   Do you want to invest? (y/n): ").strip().lower()
-        if choice == 'y':
-            player.assets.append(card)
-            player.cash -= card['cost']
-            print("   ✅ Investment made!")
-    
-    # Update game state
-    player.update_passive_income()
-    expense = player.pay_expenses()
-    print(f"\n📝 Monthly Expenses: ${expense}")
-    
-    if player.passive_income >= player.expenses and player.in_rat_race:
-        player.in_rat_race = False
-        player.escaped = True
-        print(f"\n🎉 CONGRATULATIONS {player.name}! You've escaped the Rat Race! 🎉")
-        time.sleep(2)
+    print("\nRolling dice...")
+    time.sleep(0.5)
+    for i in range(3):
+        frame = dice_art[roll - 1][i]
+        print(f"  ┌───────┐  ")
+        print(f"  │ {frame[0]}   {frame[1]} │  ")
+        print(f"  └───────┘  ")
+        time.sleep(0.2)
 
 def apply_market_event(event, current_player, players):
     if event['effect'] == "assets":
@@ -191,7 +234,18 @@ def apply_market_event(event, current_player, players):
             for asset in player.assets:
                 if asset['type'] == "real estate":
                     asset['value'] = int(asset['value'] * multiplier)
-                    asset['income'] = int(asset['income'] * multiplier)
+                    if 'income' in asset:
+                        asset['income'] = int(asset['income'] * multiplier)
+    
+    elif event['effect'] == "tech":
+        multiplier = event['multiplier']
+        print(f"   Tech assets increase by {multiplier}x!")
+        for player in players:
+            for asset in player.assets:
+                if asset['type'] in ["stock", "crypto", "startup"]:
+                    asset['value'] = int(asset['value'] * multiplier)
+                    if 'income' in asset:
+                        asset['income'] = int(asset['income'] * multiplier)
     
     elif event['effect'] == "expenses":
         amount = event['amount']
@@ -207,78 +261,211 @@ def apply_market_event(event, current_player, players):
         print(f"   {current_player.name}'s salary increases by ${event['amount']}!")
         current_player.income += event['amount']
 
+def take_turn(player, players, round_count):
+    display_header(f"Round {round_count} - {player.name}'s Turn", COLOR_BLUE)
+    player.display_status()
+    
+    input(f"\n{COLOR_YELLOW}Press Enter to roll the dice...{COLOR_RESET}")
+    roll = random.randint(1, 6)
+    display_dice_roll(roll)
+    print(f"\n{COLOR_YELLOW}🎲 Rolled a {roll}!{COLOR_RESET}")
+    
+    player.position = (player.position + roll) % 20
+    
+    # Starting position bonus
+    if player.position == 0:
+        bonus = 500
+        player.cash += bonus
+        print(f"\n{COLOR_GREEN}🌟 Starting position bonus: +${bonus}!{COLOR_RESET}")
+        player.achievements.append(f"Passed Start (Round {round_count})")
+    
+    # Position-based events
+    if player.position % 5 == 0:  # Doodads
+        card = draw_card(DOODADS)
+        print(f"\n{COLOR_RED}💸 DOODAD: {card['name']} {card['emoji']} (-${card['cost']}){COLOR_RESET}")
+        player.cash -= card['cost']
+        time.sleep(1.5)
+    
+    elif player.position % 4 == 0:  # Market Events
+        event = draw_card(MARKET_EVENTS)
+        print(f"\n{COLOR_MAGENTA}📈 MARKET EVENT: {event['name']} {event['emoji']}{COLOR_RESET}")
+        apply_market_event(event, player, players)
+        time.sleep(2)
+    
+    elif player.position % 3 == 0:  # Opportunities
+        card = draw_card(OPPORTUNITIES)
+        print(f"\n{COLOR_GREEN}💼 OPPORTUNITY: {card['name']} {card['emoji']}{COLOR_RESET}")
+        print(f"   Cost: ${card['cost']}, Income: ${card['income']}, Value: ${card['value']}")
+        print(f"   Risk Level: {'★' * card['risk']}{'☆' * (5 - card['risk'])}")
+        
+        if player.cash < card['cost']:
+            print(f"   {COLOR_RED}❌ Insufficient funds to invest{COLOR_RESET}")
+            time.sleep(1)
+            return
+        
+        choice = input(f"   {COLOR_YELLOW}Do you want to invest? (y/n): {COLOR_RESET}").strip().lower()
+        if choice == 'y':
+            # Risk calculation - higher risk assets have chance of failure
+            success_rate = min(90, 100 - (card['risk'] * 10) + (player.risk_tolerance * 5))
+            if random.randint(1, 100) <= success_rate:
+                player.assets.append(card)
+                player.cash -= card['cost']
+                print(f"   {COLOR_GREEN}✅ Investment successful!{COLOR_RESET}")
+                player.achievements.append(f"Acquired {card['name']} (Round {round_count})")
+            else:
+                print(f"   {COLOR_RED}❌ Investment failed! The opportunity didn't work out.{COLOR_RESET}")
+            time.sleep(1.5)
+    
+    elif player.position == 10:  # Liability space
+        card = draw_card(LIABILITIES)
+        print(f"\n{COLOR_RED}⚠️ LIABILITY: {card['name']} {card['emoji']} (-${card['amount']}/month){COLOR_RESET}")
+        player.liabilities.append(card)
+        player.expenses += card['amount']
+        time.sleep(1.5)
+    
+    # Update game state
+    player.update_passive_income()
+    expense = player.pay_expenses()
+    print(f"\n{COLOR_RED}📝 Monthly Expenses: ${expense}{COLOR_RESET}")
+    
+    # Track history
+    player.net_worth_history.append(player.net_worth())
+    player.cash_history.append(player.cash)
+    player.turns += 1
+    
+    # Check for escaping the rat race
+    if player.passive_income >= player.expenses and player.in_rat_race:
+        player.in_rat_race = False
+        player.escaped = True
+        print(f"\n{COLOR_GREEN}🎉 CONGRATULATIONS {player.name}! You've escaped the Rat Race! 🎉{COLOR_RESET}")
+        time.sleep(3)
+
 def fast_track(player):
-    display_header("FAST TRACK")
-    print(f"{player.name} is pursuing their dream: {player.dream}!\n")
+    display_header("FAST TRACK", COLOR_MAGENTA)
+    print(FAST_TRACK_ART)
+    print(f"{player.name} is pursuing their dream: {player.dream['name']} {player.dream['emoji']}!\n")
+    print(f"Goal: Accumulate ${player.dream['cost']:,}\n")
     turns = 0
     
     while turns < 5:
-        print(f"🚀 Turn {turns + 1}/5")
-        input("Press Enter to pursue your dream...")
+        print(f"{COLOR_MAGENTA}🚀 Turn {turns + 1}/5{COLOR_RESET}")
+        input(f"{COLOR_YELLOW}Press Enter to pursue your dream...{COLOR_RESET}")
         
-        chance = random.randint(1, 6)
-        if chance >= 5:  # 33% chance
-            print(f"\n✨ EUREKA! {player.name} has achieved the dream: {player.dream}! ✨")
-            print("🏆 YOU WIN THE GAME! 🏆")
+        # Dream achievement chance based on net worth
+        achievement_chance = min(90, (player.net_worth() / player.dream['cost']) * 100)
+        roll = random.randint(1, 100)
+        
+        if roll <= achievement_chance:
+            print(f"\n{COLOR_GREEN}✨ EUREKA! {player.name} has achieved the dream: {player.dream['name']}! ✨{COLOR_RESET}")
+            print(f"{COLOR_YELLOW}🏆 YOU WIN THE GAME! 🏆{COLOR_RESET}")
+            player.achievements.append(f"Achieved Dream: {player.dream['name']}")
             return True
         else:
             gain = random.randint(5000, 20000)
             player.cash += gain
-            print(f"\n💸 Earned ${gain} on the Fast Track")
-            print(f"💰 Current Cash: ${player.cash}")
+            print(f"\n{COLOR_GREEN}💸 Earned ${gain:,} on the Fast Track{COLOR_RESET}")
+            print(f"{COLOR_YELLOW}💰 Current Cash: ${player.cash:,}{COLOR_RESET}")
+            print(f"{COLOR_CYAN}📈 Net Worth: ${player.net_worth():,}{COLOR_RESET}")
+            print(f"{COLOR_MAGENTA}🎯 Progress to dream: {min(100, int((player.net_worth() / player.dream['cost']) * 100))}%{COLOR_RESET}")
             turns += 1
-            time.sleep(1)
+            time.sleep(2)
     
-    print("\n⏳ Time's up! You didn't achieve your dream but built wealth.")
-    print(f"💎 Final Net Worth: ${player.net_worth()}")
+    print(f"\n{COLOR_RED}⏳ Time's up! You didn't achieve your dream but built wealth.{COLOR_RESET}")
+    print(f"{COLOR_YELLOW}💎 Final Net Worth: ${player.net_worth():,}{COLOR_RESET}")
     return False
 
+def display_game_stats(players):
+    display_header("Game Statistics", COLOR_MAGENTA)
+    
+    # Find the winner (highest net worth)
+    winner = max(players, key=lambda p: p.net_worth())
+    
+    print(f"{COLOR_GREEN}🏆 Winner: {winner.name} with ${winner.net_worth():,}{COLOR_RESET}\n")
+    
+    for player in players:
+        print(f"{COLOR_CYAN}════════════ {player.name}'s Summary ════════════{COLOR_RESET}")
+        print(f"  Final Net Worth: {COLOR_YELLOW}${player.net_worth():,}{COLOR_RESET}")
+        print(f"  Cash: {COLOR_YELLOW}${player.cash:,}{COLOR_RESET}")
+        print(f"  Assets: {len(player.assets)}")
+        print(f"  Liabilities: {len(player.liabilities)}")
+        print(f"  Turns Played: {player.turns}")
+        
+        if player.achievements:
+            print(f"\n{COLOR_GREEN}  Achievements:{COLOR_RESET}")
+            for achievement in player.achievements:
+                print(f"    - {achievement}")
+        
+        print()
+
 def play_game():
-    display_header("CASH FLOW CONQUEST")
-    print("Escape the Rat Race by building passive income!\n")
+    print(TITLE_ART)
+    print(GOD_MODE_ART)
+    print(f"{COLOR_YELLOW}By Command of Master Lord DaRuT{COLOR_RESET}")
+    print(f"{COLOR_GRAY}{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{COLOR_RESET}\n")
+    
+    input(f"{COLOR_YELLOW}Press Enter to begin your journey to financial freedom...{COLOR_RESET}")
     
     num_players = 0
     while num_players < 2 or num_players > 6:
         try:
-            num_players = int(input("Enter number of players (2-6): "))
+            num_players = int(input(f"{COLOR_CYAN}Enter number of players (2-6): {COLOR_RESET}"))
+            if num_players < 2 or num_players > 6:
+                print(f"{COLOR_RED}Please enter a number between 2 and 6{COLOR_RESET}")
         except ValueError:
-            print("Please enter a valid number")
+            print(f"{COLOR_RED}Please enter a valid number{COLOR_RESET}")
     
     players = []
     for i in range(num_players):
-        name = input(f"Enter name for Player {i+1}: ")
+        name = input(f"{COLOR_CYAN}Enter name for Player {i+1}: {COLOR_RESET}")
         players.append(Player(name))
     
     round_count = 1
     winner = None
     
     while not winner:
-        display_header(f"ROUND {round_count}")
-        print(f"Passive income must exceed expenses to escape the Rat Race!\n")
+        display_header(f"Round {round_count}", COLOR_BLUE)
+        print(f"{COLOR_YELLOW}Passive income must exceed expenses to escape the Rat Race!{COLOR_RESET}\n")
         
         for player in players:
             if player.escaped:
                 continue
                 
-            take_turn(player, players)
+            take_turn(player, players, round_count)
             
             if player.escaped:
                 winner = player
                 break
         
         round_count += 1
-        time.sleep(1)
     
     # Fast track phase
-    print(f"\n\n{winner.name} has reached the Fast Track!")
-    time.sleep(2)
-    fast_track(winner)
+    display_header("FAST TRACK UNLOCKED!", COLOR_MAGENTA)
+    print(FAST_TRACK_ART)
+    print(f"{COLOR_GREEN}{winner.name} has reached the Fast Track!{COLOR_RESET}")
+    time.sleep(3)
+    dream_achieved = fast_track(winner)
     
-    print("\n\nGame Over. Wealth is yours, Master!")
+    # Display final results
+    display_header("GAME OVER", COLOR_RED)
+    if dream_achieved:
+        print(f"{COLOR_GREEN}✨ {winner.name} has achieved their dream of {winner.dream['name']}! ✨{COLOR_RESET}")
+    else:
+        print(f"{COLOR_YELLOW}💰 {winner.name} built substantial wealth but didn't achieve their dream.{COLOR_RESET}")
+    
+    print(f"{COLOR_MAGENTA}Wealth is yours, Master Lord DaRuT!{COLOR_RESET}\n")
+    
+    # Show game statistics
+    display_game_stats(players)
+    
+    print(f"{COLOR_CYAN}Thanks for playing Cash Flow Conquest!{COLOR_RESET}")
 
 # -----------------------------
 # Launch Game
 # -----------------------------
 
 if __name__ == "__main__":
-    play_game()
+    try:
+        play_game()
+    except KeyboardInterrupt:
+        print(f"\n{COLOR_RED}Game interrupted by user. Exiting...{COLOR_RESET}")
+        sys.exit(0)
