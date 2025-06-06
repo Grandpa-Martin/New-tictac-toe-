@@ -1,609 +1,284 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artisan Wood Carvings | Handcrafted Luxury Decor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary: #8B5A2B;
-            --secondary: #D2B48C;
-            --dark: #3A2C1A;
-            --light: #F5F5DC;
-            --gold: #D4AF37;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Playfair Display', serif;
-        }
-        
-        body {
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header */
-        header {
-            background-color: rgba(255, 255, 255, 0.9);
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-        }
-        
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo i {
-            margin-right: 10px;
-            color: var(--gold);
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 30px;
-        }
-        
-        nav ul li a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        nav ul li a:hover {
-            color: var(--primary);
-        }
-        
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            background: url('https://images.unsplash.com/photo-1603912699214-92627f304eb6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
-            display: flex;
-            align-items: center;
-            position: relative;
-            padding-top: 80px;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(58, 44, 26, 0.4);
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            color: white;
-            max-width: 600px;
-        }
-        
-        .hero h1 {
-            font-size: 60px;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--gold);
-            color: var(--dark);
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 2px solid var(--gold);
-        }
-        
-        .btn:hover {
-            background-color: transparent;
-            color: var(--gold);
-        }
-        
-        /* About Section */
-        .about {
-            padding: 100px 0;
-            background-color: white;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-            position: relative;
-        }
-        
-        .section-title h2 {
-            font-size: 36px;
-            color: var(--primary);
-            display: inline-block;
-            padding-bottom: 15px;
-        }
-        
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            width: 80px;
-            height: 3px;
-            background-color: var(--gold);
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .about-content {
-            display: flex;
-            align-items: center;
-            gap: 50px;
-        }
-        
-        .about-img {
-            flex: 1;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .about-img img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.5s;
-        }
-        
-        .about-img:hover img {
-            transform: scale(1.05);
-        }
-        
-        .about-text {
-            flex: 1;
-        }
-        
-        .about-text h3 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
-        
-        .about-text p {
-            margin-bottom: 15px;
-            color: #555;
-        }
-        
-        /* Products Section */
-        .products {
-            padding: 100px 0;
-            background-color: var(--light);
-        }
-        
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .product-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .product-img {
-            height: 250px;
-            overflow: hidden;
-        }
-        
-        .product-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .product-card:hover .product-img img {
-            transform: scale(1.1);
-        }
-        
-        .product-info {
-            padding: 20px;
-        }
-        
-        .product-info h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-        
-        .product-info p {
-            color: #777;
-            margin-bottom: 15px;
-        }
-        
-        .product-price {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .price {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .add-to-cart {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .add-to-cart:hover {
-            background-color: var(--dark);
-        }
-        
-        /* Testimonials */
-        .testimonials {
-            padding: 100px 0;
-            background-color: white;
-        }
-        
-        .testimonial-slider {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .testimonial {
-            padding: 30px;
-        }
-        
-        .testimonial-text {
-            font-size: 20px;
-            font-style: italic;
-            margin-bottom: 30px;
-            color: #555;
-        }
-        
-        .testimonial-author {
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 80px 0 30px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-        
-        .footer-column h3 {
-            font-size: 20px;
-            margin-bottom: 25px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--gold);
-        }
-        
-        .footer-column p {
-            margin-bottom: 15px;
-            color: #bbb;
-        }
-        
-        .footer-links li {
-            margin-bottom: 15px;
-            list-style: none;
-        }
-        
-        .footer-links a {
-            color: #bbb;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: var(--gold);
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s;
-        }
-        
-        .social-links a:hover {
-            background-color: var(--gold);
-            color: var(--dark);
-            transform: translateY(-5px);
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #bbb;
-            font-size: 14px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-            }
-            
-            nav ul {
-                margin-top: 20px;
-            }
-            
-            .hero h1 {
-                font-size: 40px;
-            }
-            
-            .about-content {
-                flex-direction: column;
-            }
-            
-            .section-title h2 {
-                font-size: 30px;
-            }
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <a href="#" class="logo">
-                <i class="fas fa-chess-queen"></i> Artisan Wood
-            </a>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Collections</a></li>
-                    <li><a href="#">Custom Work</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+import random
+import time
+import os
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Handcrafted Wooden Masterpieces</h1>
-                <p>Each piece tells a story of tradition, craftsmanship, and timeless beauty. Discover our exclusive collection of premium wood carvings that elevate any space.</p>
-                <a href="#" class="btn">Explore Collections</a>
-            </div>
-        </div>
-    </section>
+# -----------------------------
+# Cash Flow Game - Enhanced Console Version
+# By Command of Master Lord DaRuT
+# -----------------------------
 
-    <!-- About Section -->
-    <section class="about">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Heritage</h2>
-            </div>
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="Artisan at work">
-                </div>
-                <div class="about-text">
-                    <h3>Three Generations of Woodcraft Excellence</h3>
-                    <p>Founded in 1952, our family workshop has been creating exquisite wooden carvings that blend traditional techniques with contemporary design.</p>
-                    <p>Each of our artisans undergoes years of training to master the delicate art of wood carving, ensuring every piece meets our exacting standards of quality and beauty.</p>
-                    <p>We source only the finest sustainable woods, including teak, rosewood, and mahogany, treating each material with the respect it deserves.</p>
-                    <a href="#" class="btn">Our Story</a>
-                </div>
-            </div>
-        </div>
-    </section>
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.job = random.choice(list(JOB_ROLES.keys()))
+        job_data = JOB_ROLES[self.job]
+        self.income = job_data['income']
+        self.expenses = job_data['expenses']
+        self.assets = []
+        self.liabilities = []
+        self.cash = 1000
+        self.passive_income = 0
+        self.position = 0
+        self.in_rat_race = True
+        self.dream = random.choice(DREAMS)
+        self.escaped = False
+    
+    def net_worth(self):
+        asset_value = sum(asset['value'] for asset in self.assets)
+        liability_value = sum(liability['amount'] for liability in self.liabilities)
+        return asset_value - liability_value + self.cash
+    
+    def update_passive_income(self):
+        self.passive_income = sum(asset['income'] for asset in self.assets if 'income' in asset)
+    
+    def pay_expenses(self):
+        net_expense = max(0, self.expenses - self.passive_income)
+        self.cash -= net_expense
+        return net_expense
+    
+    def display_status(self):
+        print(f"\n╔════════════ {self.name}'s Status ════════════╗")
+        print(f"║ {'Job:':<15}{self.job:<25}║")
+        print(f"║ {'Income:':<15}${self.income:<24}║")
+        print(f"║ {'Expenses:':<15}${self.expenses:<24}║")
+        print(f"║ {'Cash:':<15}${self.cash:<24}║")
+        print(f"║ {'Passive Income:':<15}${self.passive_income:<24}║")
+        print(f"║ {'Net Worth:':<15}${self.net_worth():<24}║")
+        print(f"║ {'Position:':<15}{self.position:<25}║")
+        print(f"║ {'Rat Race:':<15}{'Yes' if self.in_rat_race else 'No!':<25}║")
+        print(f"║ {'Dream:':<15}{self.dream:<25}║")
+        print("╚══════════════════════════════════════╝")
+        
+        # Display assets and liabilities
+        if self.assets:
+            print("\nAssets:")
+            for asset in self.assets:
+                print(f" - {asset['name']} (Value: ${asset['value']}, Income: ${asset.get('income', 0)})")
+        
+        if self.liabilities:
+            print("\nLiabilities:")
+            for liability in self.liabilities:
+                print(f" - {liability['name']}: ${liability['amount']}/month")
 
-    <!-- Products Section -->
-    <section class="products">
-        <div class="container">
-            <div class="section-title">
-                <h2>Featured Collections</h2>
-            </div>
-            <div class="products-grid">
-                <!-- Product 1 -->
-                <div class="product-card">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80" alt="Wooden Elephant Sculpture">
-                    </div>
-                    <div class="product-info">
-                        <h3>Royal Elephant Sculpture</h3>
-                        <p>Hand-carved from single block of teak wood, 18" tall</p>
-                        <div class="product-price">
-                            <span class="price">$1,250</span>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
+# -----------------------------
+# Game Constants
+# -----------------------------
+
+JOB_ROLES = {
+    "Teacher": {"income": 3000, "expenses": 2500},
+    "Doctor": {"income": 8000, "expenses": 6000},
+    "Mechanic": {"income": 4000, "expenses": 3000},
+    "Artist": {"income": 2500, "expenses": 2000},
+    "Lawyer": {"income": 7000, "expenses": 5500},
+    "Engineer": {"income": 6000, "expenses": 4500},
+}
+
+DREAMS = [
+    "Own a Tropical Island",
+    "Start a Space Tourism Company",
+    "Open a Chain of Vegan Restaurants",
+    "Build a Wildlife Sanctuary",
+    "Launch a Record Label",
+    "Create a Tech Unicorn"
+]
+
+OPPORTUNITIES = [
+    {"type": "stock", "name": "Tech Stock", "cost": 500, "income": 0, "value": 800},
+    {"type": "real estate", "name": "Rental Property", "cost": 2000, "income": 200, "value": 3000},
+    {"type": "business", "name": "Food Truck", "cost": 1500, "income": 300, "value": 2000},
+    {"type": "franchise", "name": "Mini Mart Franchise", "cost": 5000, "income": 800, "value": 7000},
+    {"type": "crypto", "name": "Cryptocurrency", "cost": 1000, "income": 0, "value": 1500},
+    {"type": "land", "name": "Undeveloped Land", "cost": 3000, "income": 0, "value": 6000}
+]
+
+DOODADS = [
+    {"name": "Buy a New Phone", "cost": 800},
+    {"name": "Luxury Vacation", "cost": 2000},
+    {"name": "Emergency Medical Bill", "cost": 1200},
+    {"name": "Wedding Gift", "cost": 500},
+    {"name": "New Car", "cost": 3000},
+    {"name": "Designer Wardrobe", "cost": 1500},
+    {"name": "Home Renovation", "cost": 4000},
+    {"name": "Boat Purchase", "cost": 3500}
+]
+
+MARKET_EVENTS = [
+    {"name": "Stock Market Boom", "effect": "assets", "multiplier": 1.5},
+    {"name": "Real Estate Crash", "effect": "real estate", "multiplier": 0.7},
+    {"name": "Inflation Spike", "effect": "expenses", "amount": 500},
+    {"name": "Tax Refund", "effect": "cash", "amount": 1000},
+    {"name": "Business Boom", "effect": "income", "amount": 1000}
+]
+
+# -----------------------------
+# Game Functions
+# -----------------------------
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def draw_card(deck):
+    return random.choice(deck)
+
+def display_header(title):
+    clear_screen()
+    print("\n" + "═" * 50)
+    print(f"║{' ' * 16}{title}{' ' * 16}║")
+    print("═" * 50 + "\n")
+
+def take_turn(player, players):
+    display_header(f"{player.name}'s Turn")
+    player.display_status()
+    
+    input("\nPress Enter to roll the dice...")
+    roll = random.randint(1, 6)
+    player.position = (player.position + roll) % 20
+    
+    print(f"\n🎲 Rolled a {roll}! Moved to position {player.position}")
+    
+    # Position-based events
+    if player.position == 0:
+        print("\n🌟 Starting position bonus: $500!")
+        player.cash += 500
+    elif player.position % 5 == 0:
+        card = draw_card(DOODADS)
+        print(f"\n💸 DOODAD: {card['name']} (-${card['cost']})")
+        player.cash -= card['cost']
+    elif player.position % 4 == 0:
+        event = draw_card(MARKET_EVENTS)
+        print(f"\n📈 MARKET EVENT: {event['name']}")
+        apply_market_event(event, player, players)
+    elif player.position % 3 == 0:
+        card = draw_card(OPPORTUNITIES)
+        print(f"\n💼 OPPORTUNITY: {card['name']}")
+        print(f"   Cost: ${card['cost']}, Income: ${card['income']}, Value: ${card['value']}")
+        
+        if player.cash < card['cost']:
+            print("   ❌ Insufficient funds to invest")
+            return
+        
+        choice = input("   Do you want to invest? (y/n): ").strip().lower()
+        if choice == 'y':
+            player.assets.append(card)
+            player.cash -= card['cost']
+            print("   ✅ Investment made!")
+    
+    # Update game state
+    player.update_passive_income()
+    expense = player.pay_expenses()
+    print(f"\n📝 Monthly Expenses: ${expense}")
+    
+    if player.passive_income >= player.expenses and player.in_rat_race:
+        player.in_rat_race = False
+        player.escaped = True
+        print(f"\n🎉 CONGRATULATIONS {player.name}! You've escaped the Rat Race! 🎉")
+        time.sleep(2)
+
+def apply_market_event(event, current_player, players):
+    if event['effect'] == "assets":
+        multiplier = event['multiplier']
+        print(f"   All assets increase by {multiplier}x!")
+        for player in players:
+            for asset in player.assets:
+                asset['value'] = int(asset['value'] * multiplier)
+                if 'income' in asset:
+                    asset['income'] = int(asset['income'] * multiplier)
+    
+    elif event['effect'] == "real estate":
+        multiplier = event['multiplier']
+        print(f"   Real estate values change by {multiplier}x!")
+        for player in players:
+            for asset in player.assets:
+                if asset['type'] == "real estate":
+                    asset['value'] = int(asset['value'] * multiplier)
+                    asset['income'] = int(asset['income'] * multiplier)
+    
+    elif event['effect'] == "expenses":
+        amount = event['amount']
+        print(f"   Everyone's expenses increase by ${amount}!")
+        for player in players:
+            player.expenses += amount
+    
+    elif event['effect'] == "cash":
+        print(f"   {current_player.name} receives ${event['amount']}!")
+        current_player.cash += event['amount']
+    
+    elif event['effect'] == "income":
+        print(f"   {current_player.name}'s salary increases by ${event['amount']}!")
+        current_player.income += event['amount']
+
+def fast_track(player):
+    display_header("FAST TRACK")
+    print(f"{player.name} is pursuing their dream: {player.dream}!\n")
+    turns = 0
+    
+    while turns < 5:
+        print(f"🚀 Turn {turns + 1}/5")
+        input("Press Enter to pursue your dream...")
+        
+        chance = random.randint(1, 6)
+        if chance >= 5:  # 33% chance
+            print(f"\n✨ EUREKA! {player.name} has achieved the dream: {player.dream}! ✨")
+            print("🏆 YOU WIN THE GAME! 🏆")
+            return True
+        else:
+            gain = random.randint(5000, 20000)
+            player.cash += gain
+            print(f"\n💸 Earned ${gain} on the Fast Track")
+            print(f"💰 Current Cash: ${player.cash}")
+            turns += 1
+            time.sleep(1)
+    
+    print("\n⏳ Time's up! You didn't achieve your dream but built wealth.")
+    print(f"💎 Final Net Worth: ${player.net_worth()}")
+    return False
+
+def play_game():
+    display_header("CASH FLOW CONQUEST")
+    print("Escape the Rat Race by building passive income!\n")
+    
+    num_players = 0
+    while num_players < 2 or num_players > 6:
+        try:
+            num_players = int(input("Enter number of players (2-6): "))
+        except ValueError:
+            print("Please enter a valid number")
+    
+    players = []
+    for i in range(num_players):
+        name = input(f"Enter name for Player {i+1}: ")
+        players.append(Player(name))
+    
+    round_count = 1
+    winner = None
+    
+    while not winner:
+        display_header(f"ROUND {round_count}")
+        print(f"Passive income must exceed expenses to escape the Rat Race!\n")
+        
+        for player in players:
+            if player.escaped:
+                continue
                 
-                <!-- Product 2 -->
-                <div class="product-card">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Wooden Panel">
-                    </div>
-                    <div class="product-info">
-                        <h3>Floral Wall Panel</h3>
-                        <p>Intricately carved rosewood panel, 24" x 36"</p>
-                        <div class="product-price">
-                            <span class="price">$2,800</span>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 3 -->
-                <div class="product-card">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80" alt="Wooden Bowl">
-                    </div>
-                    <div class="product-info">
-                        <h3>Artisan Serving Bowl</h3>
-                        <p>Hand-turned mahogany bowl, 14" diameter</p>
-                        <div class="product-price">
-                            <span class="price">$450</span>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 4 -->
-                <div class="product-card">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Wooden Screen">
-                    </div>
-                    <div class="product-info">
-                        <h3>Ornamental Room Divider</h3>
-                        <p>Three-panel carved screen, 72" tall</p>
-                        <div class="product-price">
-                            <span class="price">$3,500</span>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+            take_turn(player, players)
+            
+            if player.escaped:
+                winner = player
+                break
+        
+        round_count += 1
+        time.sleep(1)
+    
+    # Fast track phase
+    print(f"\n\n{winner.name} has reached the Fast Track!")
+    time.sleep(2)
+    fast_track(winner)
+    
+    print("\n\nGame Over. Wealth is yours, Master!")
 
-    <!-- Testimonials -->
-    <section class="testimonials">
-        <div class="container">
-            <div class="section-title">
-                <h2>Client Testimonials</h2>
-            </div>
-            <div class="testimonial-slider">
-                <div class="testimonial">
-                    <p class="testimonial-text">"The craftsmanship of our custom dining table exceeded all expectations. It's not just furniture - it's a work of art that becomes the centerpiece of our home."</p>
-                    <p class="testimonial-author">- Sarah & James Wellington, New York</p>
-                </div>
-            </div>
-        </div>
-    </section>
+# -----------------------------
+# Launch Game
+# -----------------------------
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Artisan Wood</h3>
-                    <p>Creating timeless wooden masterpieces since 1952. Each piece is crafted with passion and precision to last for generations.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Collections</a></li>
-                        <li><a href="#">Custom Commissions</a></li>
-                        <li><a href="#">Our Process</a></li>
-                        <li><a href="#">Care Guide</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Customer Service</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Shipping Policy</a></li>
-                        <li><a href="#">Returns & Exchanges</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Careers</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> 123 Artisan Way, Portland, OR 97205</p>
-                    <p><i class="fas fa-phone"></i> (555) 123-4567</p>
-                    <p><i class="fas fa-envelope"></i> info@artisanwood.com</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Artisan Wood Carvings. All Rights Reserved. | Designed with <i class="fas fa-heart"></i> for craftsmanship</p>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
+if __name__ == "__main__":
+    play_game()
